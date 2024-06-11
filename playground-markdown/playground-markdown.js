@@ -16,8 +16,8 @@
 		'../blocky-formats/src/markdown.js'
     );
     
-    const createBlocks = (blocks: any) =>
-        blocks.map((block: any) =>
+    const createBlocks = (blocks) =>
+        blocks.map((block) =>
             wp.blocks.createBlock(
                 block.name,
                 block.attributes,
