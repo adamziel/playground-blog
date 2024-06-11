@@ -100,7 +100,7 @@ function create_db_pages($pages)
     sortByKeyLengthAndReadme($by_path);
 
     $ids_by_path = [];
-    foreach($pages as $page) {
+    foreach($by_path as $page) {
         if(str_ends_with($page['path'], 'README.md')) {
             $parent_path = dirname(dirname($page['path'])) . '/README.md';
         } else {
