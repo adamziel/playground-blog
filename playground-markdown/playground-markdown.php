@@ -14,7 +14,7 @@ function playground_markdown_scripts() {
     if (is_dir($dir)) {
         if ($dh = opendir($dir)) {
             while (($file = readdir($dh)) !== false) {
-                if ($file != "." && $file != "..") {
+                if ($file != "." && $file != ".." && str_ends_with(strtolower($file), '.md')) {
                     $filePath = $dir . '/' . $file;
                     $fileContent = file_get_contents($filePath);
 
