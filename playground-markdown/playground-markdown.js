@@ -14,7 +14,16 @@
 	await import('../blocky-formats/vendor/commonmark.min.js');
 	const { markdownToBlocks } = await import(
 		'../blocky-formats/src/markdown.js'
-	);
+    );
+    
+    const createBlocks = (blocks: any) =>
+        blocks.map((block: any) =>
+            wp.blocks.createBlock(
+                block.name,
+                block.attributes,
+                block.innerBlocks ? createBlocks(block.innerBlocks) : []
+            )
+        );
     
     await fetch('/wp-json/wp/v2/page-hierarchy', {
         method: 'POST',
@@ -27,22 +36,15 @@
                 ...file,
                 content: (
                     file.content
-                        ? markdownToBlocks(file.content).map((block) =>
-                            wp.blocks.serializeRawBlock({
-                                blockName: block.name,
-                                attrs: block.attributes,
-                                innerBlocks: block.innerBlocks,
-                                innerContent: [block.attributes.content],
-                            })
-                        )
+                        ? createBlocks(markdownToBlocks(file.content))
                         : []
                 ).join("\n"),
             }))
         }),
     })
 
-	if (window.location.pathname !== '/category/uncategorized/') {
-		window.open('/category/uncategorized/', '_self');
+    if(window.location.pathname !== '/wp-admin/edit.php') {
+        window.location = '/wp-admin/edit.php?post_type=page';
 	} else {
 		endLoading();
 	}
