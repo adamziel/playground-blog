@@ -117,6 +117,9 @@ function create_db_pages($pages)
 }
 
 function create_db_page($page, $parent_id=null) {
+    if (str_ends_with($page['path'], 'README.md')) {
+        $page['name'] = basename(dirname($page['path']));
+    }
     $post_id = wp_insert_post(array(
         'post_title' => $page['name'],
         'post_content' => $page['content'],
