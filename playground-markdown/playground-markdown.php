@@ -7,6 +7,12 @@ Author: WordPress community
 */
 
 function playground_markdown_scripts() {
+    // Only load the markdown files once
+    // @TODO: Two way sync
+    if(get_option('playground_markdown_last_updated')) {
+        return;
+    }
+
     wp_register_script('playground-markdown', plugin_dir_url(__FILE__) . 'playground-markdown.js', array('wp-api', 'wp-blocks'));
     $dir = '/wordpress/wp-content/uploads/markdown';
     $files = array();
@@ -22,12 +28,6 @@ function playground_markdown_scripts() {
                         $nestedFiles = scan_directory($filePath);
                         $files = array_merge($files, $nestedFiles);
                     } elseif (str_ends_with(strtolower($file), '.md')) {
-                        // Check if the file is already in the database
-                        // $post = get_page_by_title($file, OBJECT, 'post');
-                        // if ($post) {
-                        //     continue;
-                        // }
-
                         $files[] = array(
                             'path' => $filePath,
                             'name' => $file,
@@ -74,6 +74,8 @@ add_action('rest_api_init', 'playground_register_rest_endpoint');
 function playground_handle_rest_request($request) {
     // Handle the REST request here
     create_db_pages($request->get_params()['pages']);
+
+    update_option('playground_markdown_last_updated', time());
 
     // Example response
     $response = array(
