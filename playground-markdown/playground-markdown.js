@@ -14,7 +14,26 @@
 	await import('../blocky-formats/vendor/commonmark.min.js');
 	const { markdownToBlocks } = await import(
 		'../blocky-formats/src/markdown.js'
-	);
+    );
+    
+    const createBlocks = (blocks) =>
+        blocks.map((block) =>
+            wp.blocks.createBlock(
+                block.name,
+                block.attributes,
+                block.innerBlocks ? createBlocks(block.innerBlocks) : []
+            )
+        );
+    
+    const pagesWithBlockMarkup = [];
+    for (const file of window.playgroundMarkdown.markdown) {
+        const blocks = createBlocks(markdownToBlocks(file.content));
+        await wp.data.dispatch('core/block-editor').resetBlocks(blocks);
+        pagesWithBlockMarkup.push({
+            ...file,
+            content: select('core/editor').getCurrentPost().content,
+        });
+    }
     
     await fetch('/wp-json/wp/v2/page-hierarchy', {
         method: 'POST',
@@ -23,22 +42,7 @@
             'X-WP-Nonce': wpApiSettings.nonce,
         },
         body: JSON.stringify({
-            pages: window.playgroundMarkdown.markdown.map((file) => ({
-                ...file,
-                content: (
-                    file.content
-                        ? markdownToBlocks(file.content).map((block) => {
-                            const {content, ...attributes} = block.attributes;
-                            return wp.blocks.serializeRawBlock({
-                                blockName: block.name,
-                                attrs: attributes,
-                                innerBlocks: block.innerBlocks,
-                                innerContent: [content],
-                            })
-                        })
-                        : []
-                ).join("\n"),
-            }))
+            pages: pagesWithBlockMarkup
         }),
     })
 
