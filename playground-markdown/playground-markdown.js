@@ -18,12 +18,12 @@
   );
 
   for (let file of window.playgroundMarkdown.markdown) {
-    const content = markdownToBlocks(file.content).map((block) => wp.blocks.serializeRawBlock({
+    const content = file.content ? markdownToBlocks(file.content).map((block) => wp.blocks.serializeRawBlock({
       blockName: block.name,
       attrs: block.attributes,
       innerBlocks: block.innerBlocks,
       innerContent: [block.attributes.content],
-    }));
+    })) : [];
     await fetch("/wp-json/wp/v2/posts", {
       method: "POST",
       headers: {
