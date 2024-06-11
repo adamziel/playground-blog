@@ -38,7 +38,7 @@
 		const blocks = createBlocks(markdownToBlocks(file.content));
 		pagesWithBlockMarkup.push({
 			...file,
-            content: wp.blocks.serialize(blocks);
+            content: wp.blocks.serialize(blocks)
 		});
 	}
 
