@@ -72,6 +72,11 @@ function playground_register_rest_endpoint() {
 add_action('rest_api_init', 'playground_register_rest_endpoint');
 
 function playground_handle_rest_request($request) {
+    if(get_option('playground_markdown_last_updated')) {
+        return rest_ensure_response(array(
+            'message' => 'Markdown already loaded',
+        ));
+    }
     // Handle the REST request here
     create_db_pages($request->get_params()['pages']);
 
