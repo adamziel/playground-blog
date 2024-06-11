@@ -22,18 +22,16 @@ function playground_markdown_scripts() {
                         $nestedFiles = scan_directory($filePath);
                         $files = array_merge($files, $nestedFiles);
                     } elseif (str_ends_with(strtolower($file), '.md')) {
-                        $fileContent = file_get_contents($filePath);
-
                         // Check if the file is already in the database
-                        $post = get_page_by_title($file, OBJECT, 'post');
-                        if ($post) {
-                            continue;
-                        }
+                        // $post = get_page_by_title($file, OBJECT, 'post');
+                        // if ($post) {
+                        //     continue;
+                        // }
 
                         $files[] = array(
                             'path' => $filePath,
                             'name' => $file,
-                            'content' => $fileContent,
+                            'content' => file_get_contents($filePath),
                         );
                     }
                 }
