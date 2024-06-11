@@ -101,7 +101,11 @@ function create_db_pages($pages)
 
     $ids_by_path = [];
     foreach($pages as $page) {
-        $parent_path = dirname($page['path']) . '/README.md';
+        if(str_ends_with($page['path'], 'README.md')) {
+            $parent_path = dirname(dirname($page['path'])) . '/README.md';
+        } else {
+            $parent_path = dirname($page['path']) . '/README.md';
+        }
         if (isset($ids_by_path[$parent_path])) {
             $parent_id = $ids_by_path[$parent_path];
         } else {
