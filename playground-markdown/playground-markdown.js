@@ -1,3 +1,4 @@
+document.body.classList.add('playground-markdown-loading');
 (async function () {
 	function endLoading() {
 		document.body.classList.remove('playground-markdown-loading');
