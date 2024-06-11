@@ -31,7 +31,7 @@
         await wp.data.dispatch('core/block-editor').resetBlocks(blocks);
         pagesWithBlockMarkup.push({
             ...file,
-            content: select('core/editor').getCurrentPost().content,
+            content: wp.data.select('core/editor').getCurrentPost().content,
         });
     }
     
