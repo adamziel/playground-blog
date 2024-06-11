@@ -13,11 +13,11 @@
 		document.addEventListener('DOMContentLoaded', () => {
 			document.body.classList.add('playground-markdown-loading');
 		});
-    }
+	}
 
-    window.addEventListener('beforeunload', (event) => {
-        event.stopImmediatePropagation();
-    });
+	window.addEventListener('beforeunload', (event) => {
+		event.stopImmediatePropagation();
+	});
 
 	await import('../blocky-formats/vendor/commonmark.min.js');
 	const { markdownToBlocks } = await import(
@@ -38,7 +38,7 @@
 		const blocks = createBlocks(markdownToBlocks(file.content));
 		pagesWithBlockMarkup.push({
 			...file,
-            content: wp.blocks.serialize(blocks)
+			content: wp.blocks.serialize(blocks),
 		});
 	}
 
