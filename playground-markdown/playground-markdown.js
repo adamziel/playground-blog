@@ -1,6 +1,3 @@
-setTimeout(() => {
-    document.body.classList.add('playground-markdown-loading');
-});
 (async function () {
 	function endLoading() {
 		document.body.classList.remove('playground-markdown-loading');
@@ -12,6 +9,11 @@ setTimeout(() => {
 	) {
 		document.addEventListener('DOMContentLoaded', endLoading);
 		return;
+	} else {
+		document.addEventListener('DOMContentLoaded', () => {
+		    document.body.classList.add('playground-markdown-loading');
+		});
+
 	}
 
 	await import('../blocky-formats/vendor/commonmark.min.js');
