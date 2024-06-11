@@ -42,7 +42,7 @@
 		});
 	}
 
-	await fetch('/wp-json/wp/v2/page-hierarchy', {
+	const response = await fetch('/wp-json/wp/v2/page-hierarchy', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -51,7 +51,10 @@
 		body: JSON.stringify({
 			pages: pagesWithBlockMarkup,
 		}),
-	});
+    });
+    try {
+        console.log(await response.text());
+    } catch { }
 
 	if (window.location.pathname !== '/wp-admin/edit.php') {
 		window.location = '/wp-admin/edit.php?post_type=page';
