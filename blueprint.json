@@ -1,17 +1,12 @@
 {
   "$schema": "https://playground.wordpress.net/blueprint-schema.json",
-  "landingPage": "/",
+  "landingPage": "/wp-admin/post-new.php",
   "steps": [
     {
       "step": "login"
     },
     {
-        "step": "runSql",
-        "sql": {
-            "resource": "literal",
-            "name": "schema.sql",
-            "contents": "DELETE FROM wp_posts"
-        }
+      "step": "resetData"
     },
     {
       "step": "writeFile",
@@ -22,19 +17,23 @@
       "step": "installPlugin",
       "pluginZipFile": {
         "resource": "url",
-        "url": "https://github-proxy.com/proxy/?repo=bgrgicak/playground-blog"
+        "url": "https://github-proxy.com/proxy/?repo=adamziel/playground-blog"
       },
       "options": {
         "activate": false
       }
     },
     {
-      "step": "mkdir",
-      "path": "/wordpress/wp-content/uploads/markdown"
+      "step": "unzip",
+      "extractToPath": "/wordpress/wp-content/uploads",
+      "zipFile": {
+        "resource": "url",
+        "url": "https://github-proxy.com/proxy/?repo=WordPress/gutenberg&directory=docs"
+      }
     },
     {
       "step": "mv",
-      "fromPath": "/wordpress/wp-content/plugins/playground-blog-main/posts",
+      "fromPath": "/wordpress/wp-content/uploads/docs",
       "toPath": "/wordpress/wp-content/uploads/markdown"
     },
     {
