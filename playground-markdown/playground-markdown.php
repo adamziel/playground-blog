@@ -10,30 +10,41 @@ function playground_markdown_scripts() {
     wp_register_script('playground-markdown', plugin_dir_url(__FILE__) . 'playground-markdown.js', array('wp-api', 'wp-blocks'));
     $dir = '/wordpress/wp-content/uploads/markdown';
     $files = array();
+    function scan_directory($dir) {
+        $files = array();
 
-    if (is_dir($dir)) {
-        if ($dh = opendir($dir)) {
+        if (is_dir($dir)) {
+            $dh = opendir($dir);
             while (($file = readdir($dh)) !== false) {
-                if ($file != "." && $file != ".." && str_ends_with(strtolower($file), '.md')) {
+                if ($file != "." && $file != "..") {
                     $filePath = $dir . '/' . $file;
-                    $fileContent = file_get_contents($filePath);
+                    if (is_dir($filePath)) {
+                        $nestedFiles = scan_directory($filePath);
+                        $files = array_merge($files, $nestedFiles);
+                    } elseif (str_ends_with(strtolower($file), '.md')) {
+                        $fileContent = file_get_contents($filePath);
 
-                    // Check if the file is already in the database
-                    $post = get_page_by_title($file, OBJECT, 'post');
-                    if ($post) {
-                        continue;
+                        // Check if the file is already in the database
+                        $post = get_page_by_title($file, OBJECT, 'post');
+                        if ($post) {
+                            continue;
+                        }
+
+                        $files[] = array(
+                            'path' => $filePath,
+                            'name' => $file,
+                            'content' => $fileContent,
+                        );
                     }
-
-                    $files[] = array(
-                        'path' => $filePath,
-                        'name' => $file,
-                        'content' => $fileContent,
-                    );
                 }
             }
             closedir($dh);
         }
+
+        return $files;
     }
+
+    $files = scan_directory($dir);
     $data = array(
       'markdown' => $files
     );
