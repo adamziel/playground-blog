@@ -78,13 +78,14 @@ function playground_handle_rest_request($request) {
         ));
     }
     // Handle the REST request here
-    create_db_pages($request->get_params()['pages']);
+    $hierarchy = create_db_pages($request->get_params()['pages']);
 
     update_option('playground_markdown_last_updated', time());
 
     // Example response
     $response = array(
         'message' => 'Endpoint called successfully',
+        'hierarchy' => $hierarchy
     );
 
     return rest_ensure_response($response);
@@ -108,6 +109,7 @@ function create_db_pages($pages)
         }
         $ids_by_path[$page['path']] = create_db_page($page, $parent_id);
     }
+    return $ids_by_path;
 }
 
 function create_db_page($page, $parent_id=null) {
