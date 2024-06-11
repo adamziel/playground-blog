@@ -47,9 +47,9 @@ function playground_markdown_scripts() {
       'markdown' => $files
     );
     wp_localize_script('playground-markdown', 'playgroundMarkdown', $data);
-    wp_enqueue_script('playground-markdown');
+    wp_enqueue_editor_script('playground-markdown');
 
-    wp_enqueue_style('playground-markdown', plugin_dir_url(__FILE__) . 'playground-markdown.css');
+    wp_enqueue_editor_style('playground-markdown', plugin_dir_url(__FILE__) . 'playground-markdown.css');
 }
 add_action('wp_enqueue_scripts', 'playground_markdown_scripts');
 
