@@ -27,14 +27,15 @@
                 ...file,
                 content: (
                     file.content
-                        ? markdownToBlocks(file.content).map((block) =>
-                            wp.blocks.serializeRawBlock({
+                        ? markdownToBlocks(file.content).map((block) => {
+                            const {content, ...attributes} = block.attributes;
+                            return wp.blocks.serializeRawBlock({
                                 blockName: block.name,
-                                attrs: block.attributes,
+                                attrs: attributes,
                                 innerBlocks: block.innerBlocks,
-                                innerContent: [block.attributes.content],
+                                innerContent: [content],
                             })
-                        )
+                        })
                         : []
                 ).join("\n"),
             }))
